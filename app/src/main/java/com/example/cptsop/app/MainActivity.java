@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("--", "long");
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Options");
+                builder.setTitle(logicalList.get(position));
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

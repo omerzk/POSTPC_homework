@@ -12,18 +12,10 @@ import java.util.ArrayList;
 
 
 class AlternatingAdapter extends ArrayAdapter<String> {
-    private final int[] colors = {Color.LTGRAY, Color.CYAN};
+    private final int[] colors = {Color.RED, Color.BLUE};
 
     public AlternatingAdapter(Context context, int resource, ArrayList<String> items) {
         super(context, resource, items);
-    }
-
-    private static class ViewHolder {
-        final TextView text;
-
-        public ViewHolder(View textView) {
-            text = (TextView) textView;
-        }
     }
 
     @Override
@@ -42,6 +34,14 @@ class AlternatingAdapter extends ArrayAdapter<String> {
         holder.text.setTextColor(colors[position % 2]);
 
         return convertView;
+    }
+
+    private static class ViewHolder {
+        final TextView text;
+
+        public ViewHolder(View textView) {
+            text = (TextView) textView;
+        }
     }
 
 
