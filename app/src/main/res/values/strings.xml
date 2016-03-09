@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CPTSOP</string>
+    <string name="OPTIONS_ADD">Add</string>
+    <string name="INPUT_HINT">Todo:</string>
+</resources>
