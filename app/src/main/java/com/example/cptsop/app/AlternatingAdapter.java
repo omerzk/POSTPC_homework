@@ -11,10 +11,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-class AlternatingAdapter extends ArrayAdapter<String> {
-    private final int[] colors = {Color.RED, Color.BLUE};
+class AlternatingAdapter extends ArrayAdapter<TodoItem> {
+    private final int[] colors = {Color.RED, Color.CYAN};
 
-    public AlternatingAdapter(Context context, int resource, ArrayList<String> items) {
+    public AlternatingAdapter(Context context, int resource, ArrayList<TodoItem> items) {
         super(context, resource, items);
     }
 
@@ -25,22 +25,25 @@ class AlternatingAdapter extends ArrayAdapter<String> {
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item, parent, false);
-            holder = new ViewHolder(convertView.findViewById(R.id.itemText));
-
+            holder = new ViewHolder(convertView.findViewById(R.id.itemText), convertView.findViewById(R.id.itemDate));
             convertView.setTag(holder);
-
         } else holder = (ViewHolder) convertView.getTag();
-        holder.text.setText(((MainActivity) getContext()).getItem(position));
-        holder.text.setTextColor(colors[position % 2]);
+
+        TodoItem todo = ((MainActivity) getContext()).getItem(position);
+        holder.text.setText(todo.task);
+        holder.date.setText(todo.due.toString());
+        holder.text.setTextColor(colors[todo.isOverdue() ? 0 : 1]);
 
         return convertView;
     }
 
     private static class ViewHolder {
         final TextView text;
+        final TextView date;
 
-        public ViewHolder(View textView) {
+        public ViewHolder(View textView, View itemDate) {
             text = (TextView) textView;
+            date = (TextView) itemDate;
         }
     }
 

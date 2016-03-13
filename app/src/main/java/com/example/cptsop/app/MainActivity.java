@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,28 +13,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends Activity {
-    private ArrayList<String> logicalList;
-    private EditText input = null;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<TodoItem> logicalList;
+    private ArrayAdapter<TodoItem> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        logicalList = new ArrayList<String>();
+        logicalList = new ArrayList<TodoItem>();
         adapter = new AlternatingAdapter(this,
                 android.R.layout.simple_list_item_1,
                 logicalList);
 
         ListView uiList = (ListView) findViewById(R.id.list);
-        input = (EditText) findViewById(R.id.input);
         uiList.setAdapter(adapter);
         final Context context = this;
         uiList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -41,7 +40,7 @@ public class MainActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("--", "long");
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(logicalList.get(position));
+                builder.setTitle(logicalList.get(position).task);
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -50,20 +49,26 @@ public class MainActivity extends Activity {
                     }
                 });
                 builder.show();
+
                 return true;
             }
         });
-//        for (int i = 0; i < 200; i++) {
-//            addBullet(i);
-//        }
     }
 
-    private void addBullet() {
-        logicalList.add(input.getText().toString());
-        input.setText("");
-        adapter.notifyDataSetChanged();
-    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String todoText = data.getStringExtra("todoText");
+                Date date = (Date) data.getSerializableExtra("date");
+                logicalList.add(new TodoItem(date, todoText));
+                adapter.notifyDataSetChanged();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.d("Dialog", "canceled");
+            }
+        }
+    }
 
     private void deleteBullet(int position) {
         Log.d("----", "delete: " + String.valueOf(position));
@@ -71,14 +76,13 @@ public class MainActivity extends Activity {
         adapter.notifyDataSetChanged();
     }
 
-    public String getItem(int position) {
+    public TodoItem getItem(int position) {
         return logicalList.get(position);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("----------------------", "options");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -86,7 +90,8 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        addBullet();
+        Intent intent = new Intent(this, addNewTodoActivity.class);
+        startActivityForResult(intent, 1);
         return true;
     }
 

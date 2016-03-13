@@ -8,16 +8,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list"
-            android:background="#7effd3"
+            android:background="#646a7d"
             android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/input" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
-            android:hint="@string/INPUT_HINT"/>
+    <!--<EditText-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:inputType="textMultiLine"-->
+    <!--android:ems="10"-->
+    <!--android:id="@+id/input" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"-->
+    <!--android:hint="@string/INPUT_HINT"/>-->
 
 
 </RelativeLayout>

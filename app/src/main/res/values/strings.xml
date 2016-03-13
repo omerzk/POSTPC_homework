@@ -2,4 +2,7 @@
     <string name="app_name">CPTSOP</string>
     <string name="OPTIONS_ADD">Add</string>
     <string name="INPUT_HINT">Todo:</string>
+    <string name="TODO_TEXT_HINT">Todo</string>
+    <string name="ADD_BUTTON_TEXT">Add</string>
+    <string name="CANCEL_BUTTON_TEXT">Cancel</string>
 </resources>
