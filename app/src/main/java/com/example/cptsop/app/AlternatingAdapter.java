@@ -32,7 +32,9 @@ class AlternatingAdapter extends ArrayAdapter<TodoItem> {
         TodoItem todo = ((MainActivity) getContext()).getItem(position);
         holder.text.setText(todo.task);
         holder.date.setText(todo.due.toString());
+
         holder.text.setTextColor(colors[todo.isOverdue() ? 0 : 1]);
+        holder.date.setTextColor(colors[todo.isOverdue() ? 0 : 1]);
 
         return convertView;
     }

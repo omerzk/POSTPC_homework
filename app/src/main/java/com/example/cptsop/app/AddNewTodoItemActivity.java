@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * Created by omer on 10/03/2016.
  */
-public class addNewTodoActivity extends Activity {
+public class AddNewTodoItemActivity extends Activity {
     TextView text;
     DatePicker datePicker;
 
@@ -38,8 +38,8 @@ public class addNewTodoActivity extends Activity {
 
     public void onConfirm(View v) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("todoText", text.getText().toString());
-        returnIntent.putExtra("date", getDateFromPicker(datePicker));
+        returnIntent.putExtra("title", text.getText().toString());
+        returnIntent.putExtra("dueDate", getDateFromPicker(datePicker));
         setResult(RESULT_OK, returnIntent);
         finish();
     }

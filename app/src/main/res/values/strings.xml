@@ -5,4 +5,6 @@
     <string name="TODO_TEXT_HINT">Todo</string>
     <string name="ADD_BUTTON_TEXT">Add</string>
     <string name="CANCEL_BUTTON_TEXT">Cancel</string>
+    <string name="DELETE_BUTTON_TEXT">Delete Item</string>
+    <string name="CALL_BUTTON_TEXT">Call</string>
 </resources>

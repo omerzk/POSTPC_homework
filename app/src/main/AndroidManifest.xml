@@ -16,7 +16,7 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
             </activity>
-        <activity android:name=".addNewTodoActivity"
+        <activity android:name=".AddNewTodoItemActivity"
                   android:label="CPTSOP"
                   android:theme="@android:style/Theme.Holo.Dialog"/>
     </application>

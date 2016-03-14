@@ -1,10 +1,10 @@
 package com.example.cptsop.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,10 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends Activity {
     private ArrayList<TodoItem> logicalList;
@@ -31,7 +34,7 @@ public class MainActivity extends Activity {
         adapter = new AlternatingAdapter(this,
                 android.R.layout.simple_list_item_1,
                 logicalList);
-
+        final Pattern callRegex = Pattern.compile(".*call ([\\d-]+).*", Pattern.CASE_INSENSITIVE);
         ListView uiList = (ListView) findViewById(R.id.list);
         uiList.setAdapter(adapter);
         final Context context = this;
@@ -39,16 +42,35 @@ public class MainActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("--", "long");
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(logicalList.get(position).task);
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialog);
+                dialog.setTitle(logicalList.get(position).task);
+                Matcher m = callRegex.matcher(logicalList.get(position).task);
+                if (m.find()) {
+                    final String number = m.group(1);
+                    Button callButton = (Button) dialog.findViewById(R.id.CallButton);
+                    callButton.setText("Call " + number);
+                    callButton.setVisibility(View.VISIBLE);
+                    callButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse("tel:" + number));
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                Button deleteButton = (Button) dialog.findViewById(R.id.DeleteButton);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.d("delete", String.valueOf(position));
+                    public void onClick(View v) {
                         deleteBullet(position);
+                        dialog.dismiss();
                     }
                 });
-                builder.show();
+
+                dialog.show();
 
                 return true;
             }
@@ -60,8 +82,8 @@ public class MainActivity extends Activity {
 
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                String todoText = data.getStringExtra("todoText");
-                Date date = (Date) data.getSerializableExtra("date");
+                String todoText = data.getStringExtra("title");
+                Date date = (Date) data.getSerializableExtra("dueDate");
                 logicalList.add(new TodoItem(date, todoText));
                 adapter.notifyDataSetChanged();
             } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -70,7 +92,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void deleteBullet(int position) {
+    public void deleteBullet(int position) {
         Log.d("----", "delete: " + String.valueOf(position));
         logicalList.remove(position);
         adapter.notifyDataSetChanged();
@@ -90,7 +112,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(this, addNewTodoActivity.class);
+        Intent intent = new Intent(this, AddNewTodoItemActivity.class);
         startActivityForResult(intent, 1);
         return true;
     }
