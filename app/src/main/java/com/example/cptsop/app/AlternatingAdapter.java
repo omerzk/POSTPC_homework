@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -31,7 +32,8 @@ class AlternatingAdapter extends ArrayAdapter<TodoItem> {
 
         TodoItem todo = ((MainActivity) getContext()).getItem(position);
         holder.text.setText(todo.task);
-        holder.date.setText(todo.due.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        holder.date.setText(sdf.format(todo.due));
 
         holder.text.setTextColor(colors[todo.isOverdue() ? 0 : 1]);
         holder.date.setTextColor(colors[todo.isOverdue() ? 0 : 1]);

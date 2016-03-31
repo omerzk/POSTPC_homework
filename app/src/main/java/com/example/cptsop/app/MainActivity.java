@@ -24,19 +24,22 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity {
     private ArrayList<TodoItem> logicalList;
     private ArrayAdapter<TodoItem> adapter;
-
+    private DBOpenhelper DBHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        logicalList = new ArrayList<TodoItem>();
+        DBHelper = new DBOpenhelper(this.getApplicationContext());
+        logicalList = DBHelper.GetAll();
+
         adapter = new AlternatingAdapter(this,
                 android.R.layout.simple_list_item_1,
                 logicalList);
         final Pattern callRegex = Pattern.compile(".*call ([\\d-]+).*", Pattern.CASE_INSENSITIVE);
         ListView uiList = (ListView) findViewById(R.id.list);
         uiList.setAdapter(adapter);
+
         final Context context = this;
         uiList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -79,12 +82,11 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String todoText = data.getStringExtra("title");
                 Date date = (Date) data.getSerializableExtra("dueDate");
-                logicalList.add(new TodoItem(date, todoText));
+                insert(new TodoItem(date, todoText));
                 adapter.notifyDataSetChanged();
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Log.d("Dialog", "canceled");
@@ -92,8 +94,13 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void insert(TodoItem item) {
+        logicalList.add(item);
+        DBHelper.insert(item);
+    }
     public void deleteBullet(int position) {
         Log.d("----", "delete: " + String.valueOf(position));
+        DBHelper.delete(logicalList.get(position));
         logicalList.remove(position);
         adapter.notifyDataSetChanged();
     }
